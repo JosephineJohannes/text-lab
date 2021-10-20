@@ -62,6 +62,8 @@ mid_atl_sentiment_bing <- mid_atl %>% inner_join(get_sentiments('bing'))
 ```{r}
 ggplot(data = mid_atl_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Mid Atlantic Region Sentiment Range")+theme_minimal()
 ```
+
+
 From the graph, it seems that there are more words that have a negative sentiment, compared to the amount of words with a positive sentiment. This could be related to how Pennsylvania had recently been hit by Hurricane Ida and is still in the process of recovering from the natural disaster. Governor Tim Wolf also announced the Pennsylvania Climate Action Plan 2021 which may have increased the amount of articles released recently. 
 
 #### Another way to analyze Sentiment 
@@ -71,7 +73,9 @@ set.seed(42)
 ggplot(mid_atl[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_minimal()
 
 ```
-####Results: 
+
+
+#### Results: 
 
 There are frequent words in the documents that include science, emissions, global, energy, warming, natural, and university, excluding the words climate and change. I think it would be a good idea to look at different universities and see the overall support for climate change there as well as bigger urban areas.
 
@@ -109,6 +113,8 @@ north_sentiment_bing <- north %>% inner_join(get_sentiments('bing'))
 ```{r}
 ggplot(data = north_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Northeast Region Sentiment Range")+theme_minimal()
 ```
+
+
 From the graph, it seems like there are more words that have a negative sentiment compared to those with a positive sentiment. 
 
 #### Another way to analyze Sentiment 
@@ -118,6 +124,7 @@ set.seed(42)
 ggplot(north[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_minimal()
 
 ```
+
 
 #### Results 
 Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. 

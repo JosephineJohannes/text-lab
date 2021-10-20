@@ -196,7 +196,7 @@ head(mid_atl, 10)
 ```
 
 ### Sentiment Analysis 
-
+2. Using the word frequency from step 1, we use lexicons that help to classify the words in the documents using sentiment. 
 ```{r}
 mid_atl_sentiment_affin <- mid_atl %>% inner_join(get_sentiments('afinn'))
 mid_atl_sentiment_nrc <- mid_atl %>% inner_join(get_sentiments('nrc'))
@@ -211,6 +211,9 @@ mid_atl_sent_plot <- ggplot(data = mid_atl_sentiment_affin, aes(x=value))+geom_h
 mid_atl_sent_plot
 ```
 
+
+From the graph, it seems that there are more words that have a negative sentiment, compared to the amount of words with a positive sentiment. This could be related to how Pennsylvania had recently been hit by Hurricane Ida and is still in the process of recovering from the natural disaster. Governor Tim Wolf also announced the Pennsylvania Climate Action Plan 2021 which may have increased the amount of articles released recently. 
+
 ### Word Cloud
 
 Here we use the ggplot package 
@@ -221,6 +224,11 @@ mid_atl_cloud <- ggplot(mid_atl[1:100,], aes(label = word, size = n))+geom_text_
 mid_atl_cloud
 
 ```
+
+#### Results: 
+
+There are frequent words in the documents that include science, emissions, global, energy, warming, natural, and university, excluding the words climate and change. I think it would be a good idea to look at different universities and see the overall support for climate change there as well as bigger urban areas.
+
 
 ## NorthEast Region {.tabset}
 
@@ -248,7 +256,7 @@ head(north, 10)
 ```
 
 ### Sentiment Analysis 
-
+2. Using the word frequency from step 1, we use lexicons that help to classify the words in the documents using sentiment. 
 ```{r}
 north_sentiment_affin <- north %>% inner_join(get_sentiments('afinn'))
 north_sentiment_nrc <- north %>% inner_join(get_sentiments('nrc'))
@@ -263,6 +271,9 @@ north_sent_plot <- ggplot(data = north_sentiment_affin, aes(x=value))+geom_histo
 north_sent_plot
 ```
 
+
+From the graph, it seems like there are more words that have a negative sentiment compared to those with a positive sentiment. 
+
 ### Word Cloud 
 Here we use the ggplot package 
 ```{r}
@@ -272,6 +283,10 @@ north_cloud <- ggplot(north[1:100,], aes(label = word, size = n))+geom_text_word
 north_cloud
 
 ```
+
+
+#### Results 
+Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. 
 
 ## Every Region 
 
