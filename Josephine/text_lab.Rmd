@@ -1,7 +1,7 @@
 ---
 title: "text_lab"
-author: "Brian Wright"
-date: "9/30/2020"
+author: "Josephine Johannes"
+date: "10/20/21"
 output: html_document
 ---
 
@@ -13,8 +13,8 @@ Congratulations you've successfully transferred from being a NBA 'quant' scout t
 
 Your main goal (and the goal of all practicing data scientists!) is to translate this information into action. What patterns do you see, why do you believe this to be the case? What additional information might you want? Be as specific as possible, but keep in mind this is an initial exploratory effort...more analysis might be needed...but the result can and should advise the next steps you present to the firm. 
 
-## MidAtlantic Region 
-
+## What we're tracking 
+Essentially, we used the phrase "Climate Change" for various regions to track sentiment in 2021.
 #### Loading Essential Libraries 
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -23,6 +23,9 @@ library(ggwordcloud)
 library(textdata)
 library(rtf)
 ```
+
+## MidAtlantic Region 
+The text document was downloaded from the Lexis Nexis database. 30 of the most recent newspapers in Pennsylvania, written by the Pittsburgh Post-Gazette, were compiled as one RTF file and converted into an text file. 
 
 #### Load in Mid Atlantic Region File
 ```{r} 
@@ -33,20 +36,24 @@ mid_atl <- tibble(mid_atl)
 ```
 
 #### Word Frequencies
-1. The first step in the process is finding the frequency of words per region. 
+1. The first step in the process is finding the frequency of words per region by tokenizing the document.
 ```{r}
 #change the data frame variables in mid_atl$mid_atl character types
 mid_atl$mid_atl <- as.character(mid_atl$mid_atl)
 
+# tokenize mid_atl by word, take out common words like a, and count the number of words 
 mid_atl <- mid_atl %>% 
   unnest_tokens(word, mid_atl) %>%
   anti_join(stop_words) %>% count(word, sort=TRUE)
 ```
 
 #### Sentiment Analysis 
+2. Using the word frequency from step 1, we use lexicons that help to classify the words in the documents using sentiment. 
 ```{r}
 mid_atl_sentiment_affin <- mid_atl %>% inner_join(get_sentiments('afinn'))
+
 mid_atl_sentiment_nrc <- mid_atl %>% inner_join(get_sentiments('nrc'))
+
 mid_atl_sentiment_bing <- mid_atl %>% inner_join(get_sentiments('bing'))
 
 ```
@@ -55,6 +62,8 @@ mid_atl_sentiment_bing <- mid_atl %>% inner_join(get_sentiments('bing'))
 ```{r}
 ggplot(data = mid_atl_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Mid Atlantic Region Sentiment Range")+theme_minimal()
 ```
+From the graph, it seems that there are more words that have a negative sentiment, compared to the amount of words with a positive sentiment. This could be related to how Pennsylvania had recently been hit by Hurricane Ida and is still in the process of recovering from the natural disaster. Governor Tim Wolf also announced the Pennsylvania Climate Action Plan 2021 which may have increased the amount of articles released recently. 
+
 #### Another way to analyze Sentiment 
 Here we use the ggplot package 
 ```{r}
@@ -62,19 +71,25 @@ set.seed(42)
 ggplot(mid_atl[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_minimal()
 
 ```
+####Results: 
+
+There are frequent words in the documents that include science, emissions, global, energy, warming, natural, and university, excluding the words climate and change. I think it would be a good idea to look at different universities and see the overall support for climate change there as well as bigger urban areas.
+
+
 ## NorthEast Region 
+The text document was downloaded from the Lexus Nexus database. 30 of the most recent newspapers written by the Bangor Daily News in Maine were compiled as one RTF file and converted into an text file. 
 #### Load in NorthEast Region File
 ```{r} 
 # import data from compiled newspaper reading
 north <- read_lines("NorthEastRegion.txt")
-# make mid_atl into a tibble data structure
+# make north into a tibble data structure
 north <- tibble(north)
 ```
 
 #### Word Frequencies
 1. The first step in the process is finding the frequency of words per region. 
 ```{r}
-#change the data frame variables in mid_atl$mid_atl character types
+#change the data frame variables in north$north character types
 north$north <- as.character(north$north)
 
 north <- north %>% 
@@ -94,6 +109,8 @@ north_sentiment_bing <- north %>% inner_join(get_sentiments('bing'))
 ```{r}
 ggplot(data = north_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Northeast Region Sentiment Range")+theme_minimal()
 ```
+From the graph, it seems like there are more words that have a negative sentiment compared to those with a positive sentiment. 
+
 #### Another way to analyze Sentiment 
 Here we use the ggplot package 
 ```{r}
@@ -102,12 +119,5 @@ ggplot(north[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_m
 
 ```
 
-
-
-```{r}
-
-
-```
-Please submit a cleanly knitted HTML file describing in detail the steps you 
-took along the way, the results of your analysis and most importantly the implications/next steps you would recommend.  You will report your final results and recommendations next week in class. This will be 5 minutes per group. 
-
+#### Results 
+Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. 
