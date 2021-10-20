@@ -1,12 +1,201 @@
 ---
 title: "text_lab"
-author: "Brian Wright"
-date: "9/30/2020"
+author: "Maggie Tran"
+date: "10/20/2021"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+#install.packages("tidytext")
+library(tidytext)
+#install.packages("ggwordcloud")
+library(ggwordcloud)
+install.packages("gutenbergr") 
+library(gutenbergr)
+#install.packages('textdata')
+library(textdata)
+```
+
+```{r}
+#Read in the corpus of newspapers from Texas Monthly
+#and get the word count
+texas_monthly <- read_lines("TexasMonthly.txt")
+texas_monthly <- tibble(texas_monthly)
+View(texas_monthly)
+texas_monthly$texas_monthly <- as.character(texas_monthly$texas_monthly)
+View(texas_monthly)
+texas_monthly <- texas_monthly %>%
+  unnest_tokens(word, texas_monthly)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+View(texas_monthly)
+```
+
+```{r}
+#Sentiment analysis
+get_sentiments('afinn')# we see a list of words and there classification, 2,477 - not really that many overall. 
+get_sentiments('nrc')# looks like a good amount more 13,875, but as we can see words are classified in several different categories. 
+get_sentiments('bing')# looks like a good amount more 6,786, but as we can see just negative and positive. 
+texas_sentiment_affin <- texas_monthly %>%
+  inner_join(get_sentiments("afinn"))#using a inner join to match words and add the sentiment variable
+texas_sentiment_nrc <- texas_monthly %>%
+  inner_join(get_sentiments("nrc"))
+texas_sentiment_bing <- texas_monthly %>%
+  inner_join(get_sentiments("bing"))
+View(texas_sentiment_affin)
+```
+
+```{r}
+#We can just do some tabling to see the differences in bing and nrc
+table(texas_sentiment_bing$sentiment)
+table(texas_sentiment_nrc$sentiment)
+table(texas_sentiment_affin$sentiment)
+ggplot(data = texas_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("Texas Monthly Sentiment Range")+
+  theme_minimal()
+
+#below uses the ggwordcloud package
+set.seed(42)
+ggplot(texas_monthly[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  theme_minimal()
+```
+
+```{r}
+data_prep <- function(x,y,z){
+  i <- as_tibble(t(x))
+  ii <- unite(i,"text",y:z,remove = TRUE,sep = "")
+}
+brief_article_raw <- as.tibble(read_lines("BRIEF_ Climate change event scheduled for Saturday.txt"))
+brief_article_bag <- data_prep(brief_article_raw,'V1','V67')
+View(brief_article_bag)
+
+foreign_policy_raw <- as.tibble(read_lines("Foreign Policy United-States.txt"))
+foreign_policy_bag <- data_prep(foreign_policy_raw,'V1','V5031')
+View(foreign_policy_bag)
+
+climate_change_denial_raw <- as.tibble(read_lines("Is Climate Change Denial Thawing in Texas.txt"))
+climate_change_denial_bag <- data_prep(climate_change_denial_raw,'V1','V92')
+View(climate_change_denial_bag)
+
+lubbockites_raw <- as.tibble(read_lines("Lubbockites join global strikes.txt"))
+lubbockites_bag <- data_prep(lubbockites_raw,'V1','V76')
+View(lubbockites_bag)
+
+minnesota_grant_raw <- as.tibble(read_lines("Minnesota grant proposal.txt"))
+minnesota_grant_bag <- data_prep(minnesota_grant_raw,'V1','V70')
+View(minnesota_grant_bag)
+
+on_wine_raw <- as.tibble(read_lines("On Wine Clemens_ Bordeaux.txt"))
+on_wine_bag <- data_prep(on_wine_raw,'V1','V81')
+View(on_wine_bag)
+
+political_conditions_raw <- as.tibble(read_lines("Political Conditions Tuvalu.txt"))
+political_conditions_bag <- data_prep(political_conditions_raw,'V1','V330')
+View(political_conditions_bag)
+
+texas_tech_raw <- as.tibble(read_lines("Texas Tech_s Katharine Hayhoe.txt"))
+texas_tech_bag <- data_prep(texas_tech_raw,'V1','V78')
+View(texas_tech_bag)
+
+the_latest_raw <- as.tibble(read_lines("The Latest_ Trump dismisses concerns.txt"))
+the_latest_bag <- data_prep(the_latest_raw,'V1','V65')
+View(the_latest_bag)
+
+unfriendly_climate_raw <- as.tibble(read_lines("unfriendly climate.txt"))
+unfriendly_climate_bag <- data_prep(unfriendly_climate_raw,'V1','V109')
+View(unfriendly_climate_bag)
+
+
+article <- c("brief","foreign policy","climate change denial","lubbockites","minnesota grant","on wine","political_conditions","texas_tech","the_latest","unfriendly climate")
+tf_idf_text <- tibble(article,text=t(tibble(brief_article_bag,foreign_policy_bag,climate_change_denial_bag,lubbockites_bag,minnesota_grant_bag,on_wine_bag,political_conditions_bag,texas_tech_bag,the_latest_bag,unfriendly_climate_bag,.name_repair = "universal")))
+View(tf_idf_text)
+
+word_count <- tf_idf_text %>%
+  unnest_tokens(word, text) %>%
+  count(article, word, sort = TRUE)
+View(word_count)
+
+total_words <- word_count %>% 
+  group_by(article) %>% 
+  summarize(total = sum(n))
+
+inag_words
+
+inag_words <- left_join(word_count, total_words)
+
+inag_words <- inag_words %>%
+  bind_tf_idf(word, article, n)
+
+View(inag_words)
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#Read in the corpus of newspapers from The Atlanta Journal-Constitution
+#and get the word count
+atlanta_journal <- read_lines("TheAtlantaJournal.txt")
+atlanta_journal <- tibble(atlanta_journal)
+View(atlanta_journal)
+atlanta_journal$atlanta_journal <- as.character(atlanta_journal$atlanta_journal)
+View(atlanta_journal)
+atlanta_journal <- atlanta_journal %>%
+  unnest_tokens(word, atlanta_journal)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+View(atlanta_journal)
+```
+
+```{r}
+#Sentiment analysis
+get_sentiments('afinn')# we see a list of words and there classification, 2,477 - not really that many overall. 
+get_sentiments('nrc')# looks like a good amount more 13,875, but as we can see words are classified in several different categories. 
+get_sentiments('bing')# looks like a good amount more 6,786, but as we can see just negative and positive. 
+atlanta_sentiment_affin <- atlanta_journal %>%
+  inner_join(get_sentiments("afinn"))#using a inner join to match words and add the sentiment variable
+atlanta_sentiment_nrc <- atlanta_journal %>%
+  inner_join(get_sentiments("nrc"))
+atlanta_sentiment_bing <- atlanta_journal %>%
+  inner_join(get_sentiments("bing"))
+View(atlanta_sentiment_affin)
+```
+
+```{r}
+#We can just do some tabling to see the differences in bing and nrc
+table(atlanta_sentiment_bing$sentiment)
+table(atlanta_sentiment_nrc$sentiment)
+table(atlanta_sentiment_affin$sentiment)
+ggplot(data = atlanta_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("The Atlanta Journal Sentiment Range")+
+  theme_minimal()
+
+#below uses the ggwordcloud package
+set.seed(42)
+ggplot(atlanta_journal[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  theme_minimal()
 ```
 
 Congratulations you've successfully transferred from being a NBA 'quant' scout to a consultant specializing in US national sentiment! You've been hired by a non-profit in secret to track the level of support nationally and regionally for the Climate Change issues. The goal is to get a general idea of patterns associated with articles being written on the broad topic of Climate Change (you can also choose to select a sub-topic). In doing so your data science team has decided to explore periodicals from around the country in a effort to track the relative positive or negative sentiment and word frequencies. Luckily you have access to a world class library search engine call LexusNexus (NexusUni) that provides access to newspapers from around the country dating back decades. You'll first need to decided what words you want to track and what time might be interesting to begin your search. 
