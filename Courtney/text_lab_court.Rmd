@@ -1,0 +1,188 @@
+---
+title: "text_lab"
+author: "Courtney Kennedy"
+date: "9/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+Congratulations you've successfully transferred from being a NBA 'quant' scout to a consultant specializing in US national sentiment! You've been hired by a non-profit in secret to track the level of support nationally and regionally for the Climate Change issues. The goal is to get a general idea of patterns associated with articles being written on the broad topic of Climate Change (you can also choose to select a sub-topic). In doing so your data science team has decided to explore periodicals from around the country in a effort to track the relative positive or negative sentiment and word frequencies. Luckily you have access to a world class library search engine call LexusNexus (NexusUni) that provides access to newspapers from around the country dating back decades. You'll first need to decided what words you want to track and what time might be interesting to begin your search. 
+
+You'll need to select several newspapers from different regions in the country limiting the search to 100 articles from each paper, run sentiment analysis with each newspaper serving as a corpus and then compare the level of positive or negative connotation associated with the outcomes. Also, work through tf-idf on each corpus (newspapers) and compare the differences between the distributions (5 to 6 newspapers should be fine)
+
+Your main goal (and the goal of all practicing data scientists!) is to translate this information into action. What patterns do you see, why do you believe this to be the case? What additional information might you want? Be as specific as possible, but keep in mind this is an initial exploratory effort...more analysis might be needed...but the result can and should advise the next steps you present to the firm. 
+
+
+Please submit a cleanly knitted HTML file describing in detail the steps you 
+took along the way, the results of your analysis and most importantly the implications/next steps you would recommend.  You will report your final 
+results and recommendations next week in class. This will be 5 minutes per group. 
+
+You will need also need to try to collaborate within your group via a GitHub repo, if you choose it would be fine to assign 1 or 2 regions/newspapers per group member, that can then be added to the repo individually. Create a main repo, everyone should work in this repo and submit independently using forking/pull requests. Select a repo owner that sets up access (read access) for the week, we will rotate owners next week. 
+Also, submit a link to your the GitHub repo (every group member can submit the same link). 
+
+
+Rstudio Guidance on Git and Github (Including Branching/Pull Requests): https://r-pkgs.org/git.html#git-branch
+
+
+Here is the link to the database search via the UVA Library that should lead you to LexusNexus (Now Nexas Uni)
+https://guides.lib.virginia.edu/az.php?a=l
+
+```{r}
+library(tidyverse)
+#install.packages("tidytext")
+library(tidytext)
+#install.packages("ggwordcloud")
+library(ggwordcloud)
+#install.packages("gutenbergr") 
+library(gutenbergr)
+#install.packages('textdata')
+library(textdata)
+setwd("C:/Users/student/Documents/Fall21/introDS/text-lab/Courtney")
+```
+
+
+```{r}
+cali_inag <- read_lines("cali-news.txt")
+
+cali_inag <- tibble(cali_inag)
+View(cali_inag)
+
+cali_inag$cali_inag <- as.character(cali_inag$cali_inag)
+
+cali_inag <- cali_inag %>%
+  unnest_tokens(word, cali_inag)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+
+View(cali_inag)
+```
+```{r}
+#helps with the sentiment analysis, using package "textdata"
+
+get_sentiments('afinn')# we see a list of words and there classification, 2,467 - not really that many overall. 
+
+get_sentiments('nrc')# looks like a good amount more 13,891, but as we can see words are classified in several different categories. 
+
+get_sentiments('bing')# looks like a good amount more 6,776, but as we can see just negative and positive. 
+```
+
+
+```{r}
+cali_sentiment_affin <- cali_inag %>%
+  inner_join(get_sentiments("afinn"))#using a inner join to match words and add the sentiment variable
+
+cali_sentiment_nrc <- cali_inag %>%
+  inner_join(get_sentiments("nrc"))
+
+cali_sentiment_bing <- cali_inag %>%
+  inner_join(get_sentiments("bing"))
+
+View(cali_sentiment_bing)
+table(cali_sentiment_bing$sentiment)
+table(cali_sentiment_nrc$sentiment)
+
+ggplot(data = cali_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("California/West Coast Sentiment Range")+
+  theme_minimal()
+
+set.seed(42)
+ggplot(cali_inag[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  theme_minimal()
+```
+## Midwest Region 
+
+```{r}
+midwest_inag <- read_lines("midwest.txt")
+
+midwest_inag <- tibble(midwest_inag)
+View(midwest_inag)
+
+midwest_inag$midwest_inag <- as.character(midwest_inag$midwest_inag)
+
+midwest_inag <- midwest_inag %>%
+  unnest_tokens(word, midwest_inag)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+
+View(midwest_inag)
+```
+```{r}
+midwest_sentiment_affin <- midwest_inag %>%
+  inner_join(get_sentiments("afinn"))
+
+midwest_sentiment_nrc <- midwest_inag %>%
+  inner_join(get_sentiments("nrc"))
+
+midwest_sentiment_bing <- midwest_inag %>%
+  inner_join(get_sentiments("bing"))
+
+
+table(midwest_sentiment_bing$sentiment)
+table(midwest_sentiment_nrc$sentiment)
+
+
+ggplot(data = midwest_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("Midwest Sentiment Range")+
+  theme_minimal()
+
+set.seed(42)
+ggplot(midwest_inag[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  theme_minimal()
+```
+
+## Every Region 
+
+```{r}
+cali_inag_raw <- as.tibble(read_lines("cali-news.txt"))
+midwest_inag_raw <- as.tibble(read_lines("midwest.txt"))
+
+data_prep <- function(x,y,z){
+  i <- as_tibble(t(x))
+  ii <- unite(i,"text",y:z,remove = TRUE,sep = "")
+}
+
+
+cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
+
+midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
+
+region <- c("West","Midwest")
+
+
+tf_idf_text <- tibble(region,text=t(tibble(cali_inag_bag,midwest_inag_bag,.name_repair = "universal")))
+
+View(tf_idf_text)
+
+word_count <- tf_idf_text %>%
+  unnest_tokens(word, text) %>%
+  count(region, word, sort = TRUE)
+
+
+total_words <- word_count %>% 
+  group_by(region) %>% 
+  summarize(total = sum(n))
+
+inag_words <- left_join(word_count, total_words)
+
+View(inag_words)
+
+inag_words <- inag_words %>%
+  bind_tf_idf(word, region, n)
+
+View(inag_words)
+
+```
+

@@ -1,0 +1,329 @@
+---
+title: "text_lab"
+author: "Courtney Kennedy, Josephine Johannes, Maggie Tran"
+date: "9/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r include=FALSE}
+library(tidyverse)
+#install.packages("tidytext")
+library(tidytext)
+#install.packages("ggwordcloud")
+library(ggwordcloud)
+#install.packages("gutenbergr") 
+library(gutenbergr)
+#install.packages('textdata')
+library(textdata)
+library(ggpubr)
+setwd("C:/Users/student/Documents/Fall21/introDS/text-lab")
+```
+
+```{r include=FALSE}
+# Sentiments 
+get_sentiments('afinn')# we see a list of words and there classification, 2,467 - not really that many overall. 
+
+get_sentiments('nrc')# looks like a good amount more 13,891, but as we can see words are classified in several different categories. 
+
+get_sentiments('bing')# looks like a good amount more 6,776, but as we can see just negative and positive. 
+```
+
+## West Coast {.tabset}
+
+### Word Frequency 
+
+```{r}
+#Load in west coast file
+cali_inag <- read_lines("cali-news.txt")
+
+#Create tibble data structure
+cali_inag <- tibble(cali_inag)
+
+#Convert to character data type
+cali_inag$cali_inag <- as.character(cali_inag$cali_inag)
+
+#Determine Word Frequency in west coast
+cali_inag <- cali_inag %>%
+  unnest_tokens(word, cali_inag)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+
+#Top word frequencies
+head(cali_inag, 10)
+```
+
+### Sentiment Analysis
+
+```{r}
+# Inner join with sentiments 
+cali_sentiment_affin <- cali_inag %>%
+  inner_join(get_sentiments("afinn"))
+
+cali_sentiment_nrc <- cali_inag %>%
+  inner_join(get_sentiments("nrc"))
+
+cali_sentiment_bing <- cali_inag %>%
+  inner_join(get_sentiments("bing"))
+
+```
+
+```{r}
+# Count of word sentiments in West Coast region
+table(cali_sentiment_bing$sentiment)
+table(cali_sentiment_nrc$sentiment)
+```
+
+```{r}
+# Distribution of positive and negative word sentiments 
+west_sent_plot <- ggplot(data = cali_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("West Coast Sentiment Range")+
+  theme_minimal()
+
+west_sent_plot
+```
+
+### Word Cloud 
+
+```{r}
+set.seed(42)
+west_cloud <- ggplot(cali_inag[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  theme_minimal() +
+  ggtitle("West Coast Word Cloud")
+
+west_cloud
+```
+
+## Midwest Region{.tabset}
+
+### Word Frequency
+```{r}
+#Load in midwest file
+midwest_inag <- read_lines("midwest.txt")
+
+#Create tibble data structure
+midwest_inag <- tibble(midwest_inag)
+
+#Convert to character data type
+midwest_inag$midwest_inag <- as.character(midwest_inag$midwest_inag)
+
+#Determine Word Frequency in west coast
+midwest_inag <- midwest_inag %>%
+  unnest_tokens(word, midwest_inag)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+
+#Top word frequencies
+head(midwest_inag, 10)
+```
+
+### Sentiment Analysis
+```{r}
+# Inner join with sentiments
+
+midwest_sentiment_affin <- midwest_inag %>%
+  inner_join(get_sentiments("afinn"))
+
+midwest_sentiment_nrc <- midwest_inag %>%
+  inner_join(get_sentiments("nrc"))
+
+midwest_sentiment_bing <- midwest_inag %>%
+  inner_join(get_sentiments("bing"))
+```
+
+```{R}
+# Count of word sentiments in midwest region
+table(midwest_sentiment_bing$sentiment)
+table(midwest_sentiment_nrc$sentiment)
+```
+
+```{R}
+# Distribution of positive and negative word sentiments 
+midwest_sent_plot <- ggplot(data = midwest_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("Midwest Sentiment Range")+
+  theme_minimal()
+
+midwest_sent_plot
+```
+
+### Word Cloud
+```{R}
+set.seed(42)
+midwest_cloud <- ggplot(midwest_inag[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  theme_minimal() +
+  ggtitle("Midwest Word Cloud")
+
+midwest_cloud
+```
+
+
+## Mid Atlantic Region  {.tabset}
+
+### Word Frequency
+
+#### Load in Mid Atlantic Region File
+```{r} 
+# import data from compiled newspaper reading
+mid_atl <- read_lines("MidAtlanticRegion.txt")
+# make mid_atl into a tibble data structure
+mid_atl <- tibble(mid_atl)
+```
+
+#### Word Frequencies
+1. The first step in the process is finding the frequency of words per region. 
+```{r}
+#change the data frame variables in mid_atl$mid_atl character types
+mid_atl$mid_atl <- as.character(mid_atl$mid_atl)
+
+mid_atl <- mid_atl %>% 
+  unnest_tokens(word, mid_atl) %>%
+  anti_join(stop_words) %>% count(word, sort=TRUE)
+# Top word Frequencies
+head(mid_atl, 10)
+```
+
+### Sentiment Analysis 
+
+```{r}
+mid_atl_sentiment_affin <- mid_atl %>% inner_join(get_sentiments('afinn'))
+mid_atl_sentiment_nrc <- mid_atl %>% inner_join(get_sentiments('nrc'))
+mid_atl_sentiment_bing <- mid_atl %>% inner_join(get_sentiments('bing'))
+
+```
+
+#### Plot Sentiment 
+```{r}
+mid_atl_sent_plot <- ggplot(data = mid_atl_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Mid Atlantic Region Sentiment Range")+theme_minimal() 
+
+mid_atl_sent_plot
+```
+
+### Word Cloud
+
+Here we use the ggplot package 
+```{r}
+set.seed(42)
+mid_atl_cloud <- ggplot(mid_atl[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_minimal()+ ggtitle("Mid Atlantic Word Cloud")
+
+mid_atl_cloud
+
+```
+
+## NorthEast Region {.tabset}
+
+### Word Frequency
+
+#### Load in NorthEast Region File
+```{r} 
+# import data from compiled newspaper reading
+north <- read_lines("NorthEastRegion.txt")
+# make mid_atl into a tibble data structure
+north <- tibble(north)
+```
+
+#### Word Frequencies
+1. The first step in the process is finding the frequency of words per region. 
+```{r}
+#change the data frame variables in mid_atl$mid_atl character types
+north$north <- as.character(north$north)
+
+north <- north %>% 
+  unnest_tokens(word, north) %>%
+  anti_join(stop_words) %>% count(word, sort=TRUE)
+#top word frequencies
+head(north, 10)
+```
+
+### Sentiment Analysis 
+
+```{r}
+north_sentiment_affin <- north %>% inner_join(get_sentiments('afinn'))
+north_sentiment_nrc <- north %>% inner_join(get_sentiments('nrc'))
+north_sentiment_bing <- north %>% inner_join(get_sentiments('bing'))
+
+```
+
+#### Plot Sentiment 
+```{r}
+north_sent_plot <- ggplot(data = north_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Northeast Region Sentiment Range")+theme_minimal()
+
+north_sent_plot
+```
+
+### Word Cloud 
+Here we use the ggplot package 
+```{r}
+set.seed(42)
+north_cloud <- ggplot(north[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_minimal()+ ggtitle("Northeast Region Word Cloud")
+
+north_cloud
+
+```
+
+## Every Region 
+
+```{r}
+cali_inag_raw <- as.tibble(read_lines("cali-news.txt"))
+midwest_inag_raw <- as.tibble(read_lines("midwest.txt"))
+mid_atl_inag_raw <- as.tibble(read_lines("MidAtlanticRegion.txt"))
+north_inag_raw <- as.tibble(read_lines("NorthEastRegion.txt"))
+
+data_prep <- function(x,y,z){
+  i <- as_tibble(t(x))
+  ii <- unite(i,"text",y:z,remove = TRUE,sep = "")
+}
+
+
+cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
+midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
+mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2238')
+north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
+
+region <- c("West","Midwest", "Mid-Atlantic", "Northeast")
+
+
+tf_idf_text <- tibble(region,text=t(tibble(cali_inag_bag,midwest_inag_bag, mid_atl_inag_bag, north_inag_bag,.name_repair = "universal")))
+
+
+word_count <- tf_idf_text %>%
+  unnest_tokens(word, text) %>%
+  count(region, word, sort = TRUE)
+
+
+total_words <- word_count %>% 
+  group_by(region) %>% 
+  summarize(total = sum(n))
+
+inag_words <- left_join(word_count, total_words)
+
+inag_words <- inag_words %>%
+  bind_tf_idf(word, region, n)
+
+head(inag_words, 100)
+
+```
+
+## Compare Word Clouds
+
+```{r}
+ggarrange(west_cloud, midwest_cloud, mid_atl_cloud, north_cloud)
+```
+
+## Compare Sentiment Distribution
+```{r}
+ggarrange(west_sent_plot, midwest_sent_plot, mid_atl_sent_plot, north_sent_plot)
+```
+
