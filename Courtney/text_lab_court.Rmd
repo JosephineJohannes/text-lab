@@ -43,15 +43,6 @@ library(textdata)
 setwd("C:/Users/student/Documents/Fall21/introDS/text-lab/Courtney")
 ```
 
-```{r}
-filenames <- list.files("temp", pattern="*.rtf", full.names=TRUE)
-ldf <- lapply(filenames, read_lines)
-res <- lapply(ldf, summary)
-names(res) <- substr(filenames, 6, 30)
-for (i in 1:length(res))
-  assign(paste(paste("df", i, sep=""), "summary", sep="."), res[[i]])
-```
-
 
 ```{r}
 cali_inag <- read_lines("cali-news.txt")
@@ -68,7 +59,6 @@ cali_inag <- cali_inag %>%
 
 View(cali_inag)
 ```
-
 ```{r}
 #helps with the sentiment analysis, using package "textdata"
 
@@ -77,7 +67,10 @@ get_sentiments('afinn')# we see a list of words and there classification, 2,467 
 get_sentiments('nrc')# looks like a good amount more 13,891, but as we can see words are classified in several different categories. 
 
 get_sentiments('bing')# looks like a good amount more 6,776, but as we can see just negative and positive. 
+```
 
+
+```{r}
 cali_sentiment_affin <- cali_inag %>%
   inner_join(get_sentiments("afinn"))#using a inner join to match words and add the sentiment variable
 
@@ -104,5 +97,91 @@ ggplot(cali_inag[1:50,], aes(label = word, size = n)
   geom_text_wordcloud() +
   theme_minimal()
 ```
+## Midwest Region 
 
+```{r}
+midwest_inag <- read_lines("midwest.txt")
+
+midwest_inag <- tibble(midwest_inag)
+View(midwest_inag)
+
+midwest_inag$midwest_inag <- as.character(midwest_inag$midwest_inag)
+
+midwest_inag <- midwest_inag %>%
+  unnest_tokens(word, midwest_inag)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+
+View(midwest_inag)
+```
+```{r}
+midwest_sentiment_affin <- midwest_inag %>%
+  inner_join(get_sentiments("afinn"))
+
+midwest_sentiment_nrc <- midwest_inag %>%
+  inner_join(get_sentiments("nrc"))
+
+midwest_sentiment_bing <- midwest_inag %>%
+  inner_join(get_sentiments("bing"))
+
+
+table(midwest_sentiment_bing$sentiment)
+table(midwest_sentiment_nrc$sentiment)
+
+
+ggplot(data = midwest_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("Midwest Sentiment Range")+
+  theme_minimal()
+
+set.seed(42)
+ggplot(midwest_inag[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  theme_minimal()
+```
+## Every Region 
+
+```{r}
+cali_inag_raw <- as.tibble(read_lines("cali-news.txt"))
+midwest_inag_raw <- as.tibble(read_lines("midwest.txt"))
+
+data_prep <- function(x,y,z){
+  i <- as_tibble(t(x))
+  ii <- unite(i,"text",y:z,remove = TRUE,sep = "")
+}
+
+
+cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
+
+midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
+
+region <- c("West","Midwest")
+
+
+tf_idf_text <- tibble(region,text=t(tibble(cali_inag_bag,midwest_inag_bag,.name_repair = "universal")))
+
+View(tf_idf_text)
+
+word_count <- tf_idf_text %>%
+  unnest_tokens(word, text) %>%
+  count(region, word, sort = TRUE)
+
+
+total_words <- word_count %>% 
+  group_by(region) %>% 
+  summarize(total = sum(n))
+
+inag_words <- left_join(word_count, total_words)
+
+View(inag_words)
+
+inag_words <- inag_words %>%
+  bind_tf_idf(word, region, n)
+
+View(inag_words)
+
+```
 
