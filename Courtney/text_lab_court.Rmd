@@ -1,6 +1,6 @@
 ---
 title: "text_lab"
-author: "Brian Wright"
+author: "Courtney Kennedy"
 date: "9/30/2020"
 output: html_document
 ---
@@ -29,3 +29,80 @@ Rstudio Guidance on Git and Github (Including Branching/Pull Requests): https://
 
 Here is the link to the database search via the UVA Library that should lead you to LexusNexus (Now Nexas Uni)
 https://guides.lib.virginia.edu/az.php?a=l
+
+```{r}
+library(tidyverse)
+#install.packages("tidytext")
+library(tidytext)
+#install.packages("ggwordcloud")
+library(ggwordcloud)
+#install.packages("gutenbergr") 
+library(gutenbergr)
+#install.packages('textdata')
+library(textdata)
+setwd("C:/Users/student/Documents/Fall21/introDS/text-lab/Courtney")
+```
+
+```{r}
+filenames <- list.files("temp", pattern="*.rtf", full.names=TRUE)
+ldf <- lapply(filenames, read_lines)
+res <- lapply(ldf, summary)
+names(res) <- substr(filenames, 6, 30)
+for (i in 1:length(res))
+  assign(paste(paste("df", i, sep=""), "summary", sep="."), res[[i]])
+```
+
+
+```{r}
+cali_inag <- read_lines("cali-news.txt")
+
+cali_inag <- tibble(cali_inag)
+View(cali_inag)
+
+cali_inag$cali_inag <- as.character(cali_inag$cali_inag)
+
+cali_inag <- cali_inag %>%
+  unnest_tokens(word, cali_inag)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+
+View(cali_inag)
+```
+
+```{r}
+#helps with the sentiment analysis, using package "textdata"
+
+get_sentiments('afinn')# we see a list of words and there classification, 2,467 - not really that many overall. 
+
+get_sentiments('nrc')# looks like a good amount more 13,891, but as we can see words are classified in several different categories. 
+
+get_sentiments('bing')# looks like a good amount more 6,776, but as we can see just negative and positive. 
+
+cali_sentiment_affin <- cali_inag %>%
+  inner_join(get_sentiments("afinn"))#using a inner join to match words and add the sentiment variable
+
+cali_sentiment_nrc <- cali_inag %>%
+  inner_join(get_sentiments("nrc"))
+
+cali_sentiment_bing <- cali_inag %>%
+  inner_join(get_sentiments("bing"))
+
+View(cali_sentiment_bing)
+table(cali_sentiment_bing$sentiment)
+table(cali_sentiment_nrc$sentiment)
+
+ggplot(data = cali_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("California/West Coast Sentiment Range")+
+  theme_minimal()
+
+set.seed(42)
+ggplot(cali_inag[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  theme_minimal()
+```
+
+
