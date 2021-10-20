@@ -313,7 +313,7 @@ inag_words <- inag_words %>%
   bind_tf_idf(word, region, n)
 
 head(inag_words, 100)
-
+View(inag_words)
 ```
 
 ## Compare Word Clouds

@@ -59,6 +59,7 @@ cali_inag <- cali_inag %>%
 
 View(cali_inag)
 ```
+
 ```{r}
 #helps with the sentiment analysis, using package "textdata"
 
