@@ -512,7 +512,7 @@ head(inag_words, 100)
 View(inag_words)
 ```
 #### Overall tf-idf
-Excluding words that do not relate to climate change, the top 5 words for the tf-idf frequency by region are:
+The top 5 words for the tf-idf frequency by region are:
 
 **West Coast:** Lithium, rights, biden, desert, design
 
@@ -529,12 +529,13 @@ Excluding words that do not relate to climate change, the top 5 words for the tf
 
 
 Excluding words that do not relate to climate change, the top 5 words for the tf-idf frequency by region are:
-West Coast: Lithium, rights, biden, desert, design
-Midwest: paddock, tornado, restoration, district, lake
-Northeast: bangor, maine’s, syrup, mayewski, farmers
-Mid-Atlantic: pittsburgh, ms, co.section, carnegie, nuclear
-Southeast: trout, marshes, brook, disappear, forests
-Southwest: countries, minister, parliament, pacific, foreign
+
+**West Coast:** Lithium, rights, biden, desert, design
+**Midwest:** paddock, tornado, restoration, district, lake
+**Northeast:** bangor, maine’s, syrup, mayewski, farmers
+**Mid-Atlantic:** carnegie, nuclear, ambassador, frozen, zoo
+**Southeast:** trout, marshes, brook, disappear, forests
+**Southwest:** countries, minister, parliament, pacific, foreign
 
 When looking at climate change the west coast seems to lean in a political direction, while the midwest focuses more on farmland and damage caused by natural disasters. Similarly, the southwest leans in a political direction with an international/global focus, while the southeast leans in a natural/environmental direction. In terms of the northeast region, the industry seemed to be negatively impacted by climate change and the mid atlantic region is more focused on studies and literature it seems.  
 
