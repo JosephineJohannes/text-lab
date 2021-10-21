@@ -470,12 +470,7 @@ north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
 southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1405')
 southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V780')
 
-<<<<<<< HEAD
 region <- c("West","Midwest", "Mid-Atlantic", "Northeast", "Southwest", "Southeast")
-=======
-region <- c("WestCoast","Midwest", "Mid-Atlantic", "Northeast")
->>>>>>> 6e137ca7df22c7a0a6f83d9cc25ff4eb3af5952c
-
 
 tf_idf_text <- tibble(region,text=t(tibble(cali_inag_bag,midwest_inag_bag, mid_atl_inag_bag, north_inag_bag, southwest_inag_bag, southeast_inag_bag,.name_repair = "universal")))
 
