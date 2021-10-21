@@ -20,7 +20,7 @@ library(gutenbergr)
 #install.packages('textdata')
 library(textdata)
 library(ggpubr)
-setwd("C:/Users/student/Documents/Fall21/introDS/text-lab")
+#setwd("C:/Users/student/Documents/Fall21/introDS/text-lab")
 ```
 
 ```{r include=FALSE}
@@ -288,6 +288,129 @@ north_cloud
 #### Results 
 Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. 
 
+## Southwest Region {.tabset}
+
+### Word Frequency
+
+#### Load in Southwest Region File
+```{r}
+texas_monthly <- read_lines("TexasMonthly.txt")
+texas_monthly <- tibble(texas_monthly)
+```
+
+#### Word Frequencies
+1. The first step in the process is finding the frequency of words per region. 
+```{r}
+texas_monthly$texas_monthly <- as.character(texas_monthly$texas_monthly)
+texas_monthly <- texas_monthly %>%
+  unnest_tokens(word, texas_monthly)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+head(texas_monthly, 10)
+```
+
+### Sentiment Analysis 
+2. Using the word frequency from step 1, we use lexicons that help to classify the words in the documents using sentiment. 
+```{r}
+texas_sentiment_affin <- texas_monthly %>%
+  inner_join(get_sentiments("afinn"))
+texas_sentiment_nrc <- texas_monthly %>%
+  inner_join(get_sentiments("nrc"))
+texas_sentiment_bing <- texas_monthly %>%
+  inner_join(get_sentiments("bing"))
+```
+
+#### Plot Sentiment
+```{r}
+southwest_sent_plot <- ggplot(data = texas_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("Southwest Sentiment Range")+
+  theme_minimal()
+
+southwest_sent_plot
+```
+
+Analysis:
+
+### Word Cloud 
+Here we use the ggplot package
+```{r}
+set.seed(42)
+southwest_cloud <- ggplot(texas_monthly[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  theme_minimal()
+
+southwest_cloud
+```
+
+#### Results
+
+
+## Southeast Region {.tabset}
+
+### Word Frequency
+
+#### Load in Southeast Region File
+```{r}
+atlanta_journal <- read_lines("TheAtlantaJournal.txt")
+atlanta_journal <- tibble(atlanta_journal)
+```
+
+#### Word Frequencies
+1. The first step in the process is finding the frequency of words per region.
+```{r}
+atlanta_journal$atlanta_journal <- as.character(atlanta_journal$atlanta_journal)
+atlanta_journal <- atlanta_journal %>%
+  unnest_tokens(word, atlanta_journal)%>%
+  anti_join(stop_words)%>% 
+  count(word, sort=TRUE)
+head(atlanta_journal,10)
+```
+
+### Sentiment Analysis 
+2. Using the word frequency from step 1, we use lexicons that help to classify the words in the documents using sentiment.
+```{r}
+atlanta_sentiment_affin <- atlanta_journal %>%
+  inner_join(get_sentiments("afinn")) #using a inner join to match words and add the sentiment variable
+atlanta_sentiment_nrc <- atlanta_journal %>%
+  inner_join(get_sentiments("nrc"))
+atlanta_sentiment_bing <- atlanta_journal %>%
+  inner_join(get_sentiments("bing"))
+```
+
+#### Plot Sentiment
+```{r}
+southeast_sent_plot <- ggplot(data = atlanta_sentiment_affin, 
+       aes(x=value)
+        )+
+  geom_histogram()+
+  ggtitle("Southeast Sentiment Range")+
+  theme_minimal()
+
+southeast_sent_plot
+```
+
+Analysis:
+
+### Word Cloud 
+Here we use the ggplot package
+```{r}
+set.seed(42)
+southeast_cloud <- ggplot(atlanta_journal[1:50,], aes(label = word, size = n)
+       ) +
+  geom_text_wordcloud() +
+  ggtitle("Southeast Word Cloud")
+  theme_minimal()
+
+southeast_cloud  
+```
+
+#### Results
+
+
 ## Every Region 
 
 ```{r}
@@ -295,6 +418,8 @@ cali_inag_raw <- as.tibble(read_lines("cali-news.txt"))
 midwest_inag_raw <- as.tibble(read_lines("midwest.txt"))
 mid_atl_inag_raw <- as.tibble(read_lines("MidAtlanticRegion.txt"))
 north_inag_raw <- as.tibble(read_lines("NorthEastRegion.txt"))
+southwest_inag_raw <- as.tibble(read_lines("TexasMonthly.txt"))
+southeast_inag_raw <- as.tibble(read_lines("TheAtlantaJournal.txt"))
 
 data_prep <- function(x,y,z){
   i <- as_tibble(t(x))
@@ -306,11 +431,13 @@ cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
 midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
 mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2238')
 north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
+southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1405')
+southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V780')
 
-region <- c("West","Midwest", "Mid-Atlantic", "Northeast")
+region <- c("West","Midwest", "Mid-Atlantic", "Northeast", "Southwest", "Southeast")
 
 
-tf_idf_text <- tibble(region,text=t(tibble(cali_inag_bag,midwest_inag_bag, mid_atl_inag_bag, north_inag_bag,.name_repair = "universal")))
+tf_idf_text <- tibble(region,text=t(tibble(cali_inag_bag,midwest_inag_bag, mid_atl_inag_bag, north_inag_bag, southwest_inag_bag, southeast_inag_bag,.name_repair = "universal")))
 
 
 word_count <- tf_idf_text %>%
@@ -334,11 +461,11 @@ View(inag_words)
 ## Compare Word Clouds
 
 ```{r}
-ggarrange(west_cloud, midwest_cloud, mid_atl_cloud, north_cloud)
+ggarrange(west_cloud, midwest_cloud, mid_atl_cloud, north_cloud, southwest_cloud, southeast_cloud)
 ```
 
 ## Compare Sentiment Distribution
 ```{r}
-ggarrange(west_sent_plot, midwest_sent_plot, mid_atl_sent_plot, north_sent_plot)
+ggarrange(west_sent_plot, midwest_sent_plot, mid_atl_sent_plot, north_sent_plot, southwest_sent_plot, southeast_sent_plot)
 ```
 
