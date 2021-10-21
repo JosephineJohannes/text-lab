@@ -5,10 +5,14 @@ date: "9/30/2020"
 output: html_document
 ---
 ## The Process
-Steps: 
+**Steps:** 
+
 1. Find newspapers that correspond to a specific region in the United States and download multiple articles as one text file 
+
 2. Load the files and essential libraries 
+
 3. Find the frequency of words per region by tokenizing the document 
+
 4. Use Lexicons that help classify the sentiment of the respective words 
 
 ```{r setup, include=FALSE}
@@ -318,7 +322,7 @@ north_cloud
 
 
 #### Results 
-Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. If there are carbon plants, this could lead to negative sentiment for climate change because it would decrease profitability for the plants. It's also interesting how maple showed up in the climate change articles because I don't think maple is related to climate change.
+Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. If there are carbon plants, this could lead to negative sentiment for climate change because it would decrease profitability for the plants. It's also interesting how maple showed up in the climate change articles because maple is actually important for Maine's economy as the maple syrup industry is one of it's biggest industries. There have been some studies that have shown how climate change negatively impacts the maple syrup industry, so without context, it would have been unnerving to see maple in a climate change word cloud.
 
 ## Southwest Region {.tabset}
 
@@ -454,7 +458,7 @@ midwest_inag_raw <- as.tibble(read_lines("midwest.txt"))
 mid_atl_inag_raw <- as.tibble(read_lines("MidAtlanticRegion.txt"))
 north_inag_raw <- as.tibble(read_lines("NorthEastRegion.txt"))
 southwest_inag_raw <- as.tibble(read_lines("TexasMonthly.txt"))
-southeast_inag_raw <- as.tibble(read_lines("TheAtlantaJournal.txt"))
+southeast_inag_raw <-as.tibble(read_lines("TheAtlantaJournal.txt"))
 
 data_prep <- function(x,y,z){
   i <- as_tibble(t(x))
@@ -462,10 +466,10 @@ data_prep <- function(x,y,z){
 }
 
 
-cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
-midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
-mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2238')
-north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
+cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2812')
+midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2175')
+mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2088')
+north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V1979')
 southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1405')
 southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V780')
 
@@ -491,6 +495,22 @@ inag_words <- inag_words %>%
 head(inag_words, 100)
 View(inag_words)
 ```
+#### Overall tf-idf
+Excluding words that do not relate to climate change, the top 5 words for the tf-idf frequency by region are:
+
+**West Coast:** Lithium, rights, biden, desert, design
+
+**Midwest:** paddock, tornado, restoration, district, lake
+
+**Northeast:** bangor, maine’s, syrup, mayewski, farmers
+
+**Mid-Atlantic:** pittsburgh, ms, co.section, carnegie, nuclear
+
+**Southeast:** trout, marshes, brook, disappear, forests
+
+**Southwest:** countries, minister, parliament, pacific, foreign
+
+
 
 ## Compare Word Clouds
 
@@ -503,9 +523,11 @@ ggarrange(west_cloud, midwest_cloud, mid_atl_cloud, north_cloud, southwest_cloud
 ggarrange(west_sent_plot, midwest_sent_plot, mid_atl_sent_plot, north_sent_plot, southwest_sent_plot, southeast_sent_plot)
 ```
 
-Results: 
+
+### Results: 
 Overall, it seems that the regions chosen had more of a negative sentiment than a positive sentiment for climate change. 
 
-Recommendations: 
-I would recommend looking at different universities and trying to get a sense of what the political climate is there. It seems that there’s more support for climate change in more urban areas as opposed to rural areas 
+
+### Recommendations: 
+To look more specifically at the various stakeholders involved in climate change for the overall regions, I would recommend looking into universities as well as their faculty and carbon plants for each region respectively. Although there might be a higher negative sentiment in those areas, it would be interesting to find out the context as to why there is such a negative sentiment. In more recent news, I think more studies have been conducted on climate change and how the world is losing the necessary sources to survive at a faster pace than calculated, which leads into emotions like fear and anger. Overall, it would be important to look at the different stakeholders. 
 
