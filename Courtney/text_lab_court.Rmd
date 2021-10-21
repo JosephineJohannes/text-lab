@@ -43,7 +43,7 @@ library(textdata)
 setwd("C:/Users/student/Documents/Fall21/introDS/text-lab/Courtney")
 ```
 
-
+The west coast data comes from the LA Times newspaper.  
 ```{r}
 cali_inag <- read_lines("cali-news.txt")
 
@@ -81,7 +81,6 @@ cali_sentiment_nrc <- cali_inag %>%
 cali_sentiment_bing <- cali_inag %>%
   inner_join(get_sentiments("bing"))
 
-View(cali_sentiment_bing)
 table(cali_sentiment_bing$sentiment)
 table(cali_sentiment_nrc$sentiment)
 
@@ -91,13 +90,19 @@ ggplot(data = cali_sentiment_affin,
   geom_histogram()+
   ggtitle("California/West Coast Sentiment Range")+
   theme_minimal()
-
+```
+The sentiment analysis using bing shows that the west coast uses more negative words than positive words.  The nrc sentitiment contradicts this and has a higher positive sentiment word count that negative, but also adds to this by showing that most of the words invoke a feeling of trust and then the second highest feeling is fear. The affin sentiment distribution shows that there is a slight favor of negative sentiment words in the west coast region's newspapers.  Overall it appears that the negative sentiment is more common, and it most likely correlates to the more "doomsday" approach that more liberal regions have, such as the west coast, since the approach is instilling fear to promote change in current behaviors.  There is also a use of trust especially towards new technology and this is where the trust and positive sentiment most likely comes in.   
+```{R}
 set.seed(42)
-ggplot(cali_inag[1:50,], aes(label = word, size = n)
+ggplot(cali_inag[1:100,], aes(label = word, size = n)
        ) +
   geom_text_wordcloud() +
   theme_minimal()
 ```
+
+We see that the most common words from the west coast region are some expected terms: climate, change, los, angeles, and then some other words that indicate the west coast's main concerns with climate change: heat, water, temperatures, warming, extreme, drought, and fire.  Overall these more specific words correlate with the climate change symptoms that the west coast is experiencing such as water shortages, extreme temperatures, and wildfires.  Some other popular words seem to correlate with the environmental science industry that is fighting climate change such as electric, industry, environmental, power, companies, and emissions, which all make sense given that the west coast is a hub of environmental research and clean industries.     
+
+
 ## Midwest Region 
 
 ```{r}
@@ -136,13 +141,16 @@ ggplot(data = midwest_sentiment_affin,
   geom_histogram()+
   ggtitle("Midwest Sentiment Range")+
   theme_minimal()
-
+```
+The sentiment analysis using bing shows that the midwest uses more negative words than positive words.  The nrc sentiment contradicts this and has a higher positive sentiment word count that negative, but also adds to this by showing that most of the words invoke a feeling of trust. The affin sentiment distribution shows that there is a slight favor of negative sentiment words in the midwests region's newspapers, but the distribution is more even than the west coast distribution.  Overall it appears that the negative and positive sentiment are about even in the midwest, indicating that there is not a strong lean in either positive or negative words.  Overall it seems that the midwest is trying to instill a feeling of trust through talking about climate change.  
+```{R}
 set.seed(42)
-ggplot(midwest_inag[1:50,], aes(label = word, size = n)
+ggplot(midwest_inag[1:100,], aes(label = word, size = n)
        ) +
   geom_text_wordcloud() +
   theme_minimal()
 ```
+We see that the most common words from the midwest region are some expected terms: climate, change, chicago, and then some other words that indicate the midwest's main concerns with climate change: lake, water, warming, and energy.  Overall these more specific words correlate with the climate change symptoms that the midwest is experiencing such as concerns with the great lakes and the warming of the midwest.  Again overall the words seemed pretty neutral and did not sway in either a positive or negative direction, indicating that the midwest doesn't appear to have very strong opinions on climate change.    
 
 ## Every Region 
 
