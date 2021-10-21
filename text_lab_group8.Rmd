@@ -4,6 +4,12 @@ author: "Courtney Kennedy, Josephine Johannes, Maggie Tran"
 date: "9/30/2020"
 output: html_document
 ---
+## The Process
+Steps: 
+1. Find newspapers that correspond to a specific region in the United States and download multiple articles as one text file 
+2. Load the files and essential libraries 
+3. Find the frequency of words per region by tokenizing the document 
+4. Use Lexicons that help classify the sentiment of the respective words 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -202,6 +208,10 @@ mid_atl_sentiment_affin <- mid_atl %>% inner_join(get_sentiments('afinn'))
 mid_atl_sentiment_nrc <- mid_atl %>% inner_join(get_sentiments('nrc'))
 mid_atl_sentiment_bing <- mid_atl %>% inner_join(get_sentiments('bing'))
 
+table(mid_atl_sentiment_bing$sentiment)
+
+table(mid_atl_sentiment_nrc$sentiment)
+
 ```
 
 #### Plot Sentiment 
@@ -227,7 +237,7 @@ mid_atl_cloud
 
 #### Results: 
 
-There are frequent words in the documents that include science, emissions, global, energy, warming, natural, and university, excluding the words climate and change. I think it would be a good idea to look at different universities and see the overall support for climate change there as well as bigger urban areas.
+There are frequent words in the documents that include science, emissions, global, energy, warming, natural, and university, excluding the words climate and change. I think it would be a good idea to look at different universities and see the overall support for climate change there as well as bigger urban areas. I would say that Pittsburgh is a big urban area that uses a lot of energy so there could be negative sentiment due to the energy consumption in the city. It seems like there has been a correlation with the science as evidence for climate change, so a more negative sentiment could also be seen in scholarly literature. 
 
 
 ## NorthEast Region {.tabset}
@@ -286,7 +296,7 @@ north_cloud
 
 
 #### Results 
-Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. 
+Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. If there are carbon plants, this could lead to negative sentiment for climate change because it would decrease profitability for the plants. It's also interesting how maple showed up in the climate change articles because I don't think maple is related to climate change.
 
 ## Every Region 
 
@@ -341,4 +351,10 @@ ggarrange(west_cloud, midwest_cloud, mid_atl_cloud, north_cloud)
 ```{r}
 ggarrange(west_sent_plot, midwest_sent_plot, mid_atl_sent_plot, north_sent_plot)
 ```
+
+Results: 
+Overall, it seems that the regions chosen had more of a negative sentiment than a positive sentiment for climate change. 
+
+Recommendations: 
+I would recommend looking at different universities and trying to get a sense of what the political climate is there. It seems that there’s more support for climate change in more urban areas as opposed to rural areas 
 
