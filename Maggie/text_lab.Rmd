@@ -194,7 +194,7 @@ set.seed(42)
 ggplot(atlanta_journal[1:50,], aes(label = word, size = n)
        ) +
   geom_text_wordcloud() +
-  ggtitle("Southeast Word Cloud")
+  ggtitle("Southeast Word Cloud") +
   theme_minimal()
 ```
 
