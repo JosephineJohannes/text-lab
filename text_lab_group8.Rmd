@@ -1,7 +1,7 @@
 ---
 title: "text_lab"
 author: "Courtney Kennedy, Josephine Johannes, Maggie Tran"
-date: "9/30/2020"
+date: "10/20/2021"
 output: html_document
 ---
 ## The Process
@@ -381,8 +381,13 @@ set.seed(42)
 southwest_cloud <- ggplot(texas_monthly[1:50,], aes(label = word, size = n)
        ) +
   geom_text_wordcloud() +
+<<<<<<< HEAD
   theme_minimal() +
   ggtitle("Southwest Word Cloud")
+=======
+  ggtitle("Southwest Word Cloud") +
+  theme_minimal()
+>>>>>>> 8a9d46e55c268a266198bf7fa1240e57c5594dc3
 
 southwest_cloud
 ```
