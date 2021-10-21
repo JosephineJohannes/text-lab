@@ -4,6 +4,12 @@ author: "Courtney Kennedy, Josephine Johannes, Maggie Tran"
 date: "9/30/2020"
 output: html_document
 ---
+## The Process
+Steps: 
+1. Find newspapers that correspond to a specific region in the United States and download multiple articles as one text file 
+2. Load the files and essential libraries 
+3. Find the frequency of words per region by tokenizing the document 
+4. Use Lexicons that help classify the sentiment of the respective words 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -36,6 +42,8 @@ get_sentiments('bing')# looks like a good amount more 6,776, but as we can see j
 
 ### Word Frequency 
 
+1. The first step in the process is finding the frequency of words per region.
+
 ```{r}
 #Load in west coast file
 cali_inag <- read_lines("cali-news.txt")
@@ -58,6 +66,7 @@ head(cali_inag, 10)
 
 ### Sentiment Analysis
 
+2. Using the word frequency from step 1, we use lexicons that help to classify the words in the documents using sentiment. 
 ```{r}
 # Inner join with sentiments 
 cali_sentiment_affin <- cali_inag %>%
@@ -89,7 +98,11 @@ west_sent_plot <- ggplot(data = cali_sentiment_affin,
 west_sent_plot
 ```
 
+The sentiment analysis using bing shows that the west coast uses more negative words than positive words.  The nrc sentitiment contradicts this and has a higher positive sentiment word count that negative, but also adds to this by showing that most of the words invoke a feeling of trust and then the second highest feeling is fear. The affin sentiment distribution shows that there is a slight favor of negative sentiment words in the west coast region's newspapers.  Overall it appears that the negative sentiment is more common, and it most likely correlates to the more "doomsday" approach that more liberal regions have, such as the west coast, since the approach is instilling fear to promote change in current behaviors.  There is also a use of trust especially towards new technology and this is where the trust and positive sentiment most likely comes in.   
+
 ### Word Cloud 
+
+3. Create a word cloud to see the popularity of the words
 
 ```{r}
 set.seed(42)
@@ -102,9 +115,14 @@ west_cloud <- ggplot(cali_inag[1:50,], aes(label = word, size = n)
 west_cloud
 ```
 
+We see that the most common words from the west coast region are some expected terms: climate, change, los, angeles, and then some other words that indicate the west coast's main concerns with climate change: heat, water, temperatures, warming, extreme, drought, and fire.  Overall these more specific words correlate with the climate change symptoms that the west coast is experiencing such as water shortages, extreme temperatures, and wildfires.  Some other popular words seem to correlate with the environmental science industry that is fighting climate change such as electric, industry, environmental, power, companies, and emissions, which all make sense given that the west coast is a hub of environmental research and clean industries. 
+
 ## Midwest Region{.tabset}
 
 ### Word Frequency
+
+1. The first step in the process is finding the frequency of words per region.
+
 ```{r}
 #Load in midwest file
 midwest_inag <- read_lines("midwest.txt")
@@ -126,6 +144,9 @@ head(midwest_inag, 10)
 ```
 
 ### Sentiment Analysis
+
+2. Using the word frequency from step 1, we use lexicons that help to classify the words in the documents using sentiment. 
+
 ```{r}
 # Inner join with sentiments
 
@@ -138,6 +159,7 @@ midwest_sentiment_nrc <- midwest_inag %>%
 midwest_sentiment_bing <- midwest_inag %>%
   inner_join(get_sentiments("bing"))
 ```
+
 
 ```{R}
 # Count of word sentiments in midwest region
@@ -157,7 +179,12 @@ midwest_sent_plot <- ggplot(data = midwest_sentiment_affin,
 midwest_sent_plot
 ```
 
+The sentiment analysis using bing shows that the midwest uses more negative words than positive words.  The nrc sentiment contradicts this and has a higher positive sentiment word count that negative, but also adds to this by showing that most of the words invoke a feeling of trust. The affin sentiment distribution shows that there is a slight favor of negative sentiment words in the midwests region's newspapers, but the distribution is more even than the west coast distribution.  Overall it appears that the negative and positive sentiment are about even in the midwest, indicating that there is not a strong lean in either positive or negative words.  Overall it seems that the midwest is trying to instill a feeling of trust through talking about climate change.
+
 ### Word Cloud
+
+3. Create a word cloud to see the popularity of the words
+
 ```{R}
 set.seed(42)
 midwest_cloud <- ggplot(midwest_inag[1:50,], aes(label = word, size = n)
@@ -169,6 +196,7 @@ midwest_cloud <- ggplot(midwest_inag[1:50,], aes(label = word, size = n)
 midwest_cloud
 ```
 
+We see that the most common words from the midwest region are some expected terms: climate, change, chicago, and then some other words that indicate the midwest's main concerns with climate change: lake, water, warming, and energy.  Overall these more specific words correlate with the climate change symptoms that the midwest is experiencing such as concerns with the great lakes and the warming of the midwest.  Again overall the words seemed pretty neutral and did not sway in either a positive or negative direction, indicating that the midwest doesn't appear to have very strong opinions on climate change. 
 
 ## Mid Atlantic Region  {.tabset}
 
@@ -202,6 +230,10 @@ mid_atl_sentiment_affin <- mid_atl %>% inner_join(get_sentiments('afinn'))
 mid_atl_sentiment_nrc <- mid_atl %>% inner_join(get_sentiments('nrc'))
 mid_atl_sentiment_bing <- mid_atl %>% inner_join(get_sentiments('bing'))
 
+table(mid_atl_sentiment_bing$sentiment)
+
+table(mid_atl_sentiment_nrc$sentiment)
+
 ```
 
 #### Plot Sentiment 
@@ -227,7 +259,7 @@ mid_atl_cloud
 
 #### Results: 
 
-There are frequent words in the documents that include science, emissions, global, energy, warming, natural, and university, excluding the words climate and change. I think it would be a good idea to look at different universities and see the overall support for climate change there as well as bigger urban areas.
+There are frequent words in the documents that include science, emissions, global, energy, warming, natural, and university, excluding the words climate and change. I think it would be a good idea to look at different universities and see the overall support for climate change there as well as bigger urban areas. I would say that Pittsburgh is a big urban area that uses a lot of energy so there could be negative sentiment due to the energy consumption in the city. It seems like there has been a correlation with the science as evidence for climate change, so a more negative sentiment could also be seen in scholarly literature. 
 
 
 ## NorthEast Region {.tabset}
@@ -286,8 +318,9 @@ north_cloud
 
 
 #### Results 
-Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. 
+Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. If there are carbon plants, this could lead to negative sentiment for climate change because it would decrease profitability for the plants. It's also interesting how maple showed up in the climate change articles because I don't think maple is related to climate change.
 
+<<<<<<< HEAD
 ## Southwest Region {.tabset}
 
 ### Word Frequency
@@ -412,6 +445,9 @@ southeast_cloud
 
 
 ## Every Region 
+=======
+## National Comparison 
+>>>>>>> 6e137ca7df22c7a0a6f83d9cc25ff4eb3af5952c
 
 ```{r}
 cali_inag_raw <- as.tibble(read_lines("cali-news.txt"))
@@ -434,7 +470,11 @@ north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
 southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1405')
 southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V780')
 
+<<<<<<< HEAD
 region <- c("West","Midwest", "Mid-Atlantic", "Northeast", "Southwest", "Southeast")
+=======
+region <- c("WestCoast","Midwest", "Mid-Atlantic", "Northeast")
+>>>>>>> 6e137ca7df22c7a0a6f83d9cc25ff4eb3af5952c
 
 
 tf_idf_text <- tibble(region,text=t(tibble(cali_inag_bag,midwest_inag_bag, mid_atl_inag_bag, north_inag_bag, southwest_inag_bag, southeast_inag_bag,.name_repair = "universal")))
@@ -468,4 +508,10 @@ ggarrange(west_cloud, midwest_cloud, mid_atl_cloud, north_cloud, southwest_cloud
 ```{r}
 ggarrange(west_sent_plot, midwest_sent_plot, mid_atl_sent_plot, north_sent_plot, southwest_sent_plot, southeast_sent_plot)
 ```
+
+Results: 
+Overall, it seems that the regions chosen had more of a negative sentiment than a positive sentiment for climate change. 
+
+Recommendations: 
+I would recommend looking at different universities and trying to get a sense of what the political climate is there. It seems that there’s more support for climate change in more urban areas as opposed to rural areas 
 
