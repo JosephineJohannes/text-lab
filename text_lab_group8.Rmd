@@ -467,19 +467,19 @@ data_prep <- function(x,y,z){
 }
 
 
-#cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
-#midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
-#mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2238')
-#north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
-#southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1458')
-#southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V833')
+cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
+midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
+mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2238')
+north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
+southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1458')
+southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V833')
 
-cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2812')
-midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2175')
-mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2088')
-north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V1979')
-southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1405')
-southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V780')
+# cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2812')
+# midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2175')
+# mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2088')
+# north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V1979')
+# southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1405')
+# southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V780')
 
 region <- c("WestCoast", "Midwest", "Mid-Atlantic", "Northeast", "Southwest", "Southeast")
 
