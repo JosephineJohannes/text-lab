@@ -320,7 +320,6 @@ north_cloud
 #### Results 
 Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. If there are carbon plants, this could lead to negative sentiment for climate change because it would decrease profitability for the plants. It's also interesting how maple showed up in the climate change articles because I don't think maple is related to climate change.
 
-<<<<<<< HEAD
 ## Southwest Region {.tabset}
 
 ### Word Frequency
@@ -365,7 +364,7 @@ southwest_sent_plot <- ggplot(data = texas_sentiment_affin,
 southwest_sent_plot
 ```
 
-Analysis:
+Analysis: The affin sentiment analysis shows that negative words are used more than positive words in the context of climate change in the southwest. From the word frequency, it seems that in the southwest, the rhetoric is focused on the government and political affiliations with climate change. From the nrc sentiment analysis, there is both fear and trust associated with the words used in the southwest. 
 
 ### Word Cloud 
 Here we use the ggplot package
@@ -380,7 +379,7 @@ southwest_cloud
 ```
 
 #### Results
-
+The word cloud for the southwest shows that conversation about climate change in the southwest is mostly about the government as well as international and global matters with words like "government"/"parliament", and "countries"/"nations". Overall, it seems like the southwest's main concerns with climate change are both at the national and international level with a focus on the government/political aspects of it and how it affects the people.
 
 ## Southeast Region {.tabset}
 
@@ -426,7 +425,7 @@ southeast_sent_plot <- ggplot(data = atlanta_sentiment_affin,
 southeast_sent_plot
 ```
 
-Analysis:
+Analysis: The affin sentiment analysis for the southeast shows that more negative words are used than positive words. The nrc sentiment analysis supports this as it shows that feelings of fear and anger are evoked from these words. The bing analysis also shows that there is a greater frequency of negative than positive words.
 
 ### Word Cloud 
 Here we use the ggplot package
@@ -442,7 +441,7 @@ southeast_cloud
 ```
 
 #### Results
-
+The word cloud for the southeast suggests that the southeast's concerns with climate change involve health and science as well as politics, with words like "health", "science"/"scientists", and "carbon", as well as "presidential", "candidates", and "news". Judging from the word cloud alone, the words are pretty neutral, but when combined with the sentiment analysis, it seems as though words in the southeast about climate change invoke anger and fear on the topics of health, science, and politics.
 
 ## Every Region 
 =======
