@@ -133,3 +133,38 @@ ggplot(north[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_m
 
 #### Results 
 Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. If there are carbon plants, this could lead to negative sentiment for climate change because it would decrease profitability for the plants. It's also interesting how maple showed up in the climate change articles because I don't think maple is related to climate change.
+
+
+#### Conducting the tf-idf 
+```{r}
+mid_atl_raw <- as.tibble(read_lines("MidAtlanticRegion.txt"))
+north_raw <- as.tibble(read_lines("NorthEastRegion.txt"))
+data_prep <- function(x,y,z){
+  i <- as_tibble(t(x))#transposing the data set
+  ii <- unite(i,"text",y:z,remove = TRUE,sep = "")
+}
+mid_atl_bag <- data_prep(mid_atl_raw,'V1','V2088')
+north_bag<- data_prep(north_raw,'V1','V1979')
+region <- c("MidAtlantic Region","NorthEast Region")
+tf_idf_text <- tibble(region,text=t(tibble(mid_atl_bag,north_bag,.name_repair = "universal")))
+View(tf_idf_text)
+word_count <- tf_idf_text %>%
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words) %>%
+  count(region, word, sort = TRUE)
+View(word_count)
+total_words <- word_count %>% 
+  group_by(region) %>% 
+  summarize(total = sum(n))
+region_words <- inner_join(word_count, total_words)
+region_words <- region_words %>%
+  bind_tf_idf(word, region, n)
+View(region_words)
+```
+
+
+From the tf-idf, we were able to see some of the more popular words across the MidAtlantic region and the NorthEast region. Excluding the words "climate" and "change", the most important words seemed to be Pittsburgh and Bangor. This makes sense as it's the names of the newspapers but could be filtered out. The next most important words were syrup and mayewski. Through research, I found that Mayewski is the director and professor of the Climate Change Institute at the University of Maine. I also found in some other articles that climate change is negatively impacting Maine's maple syrup industry which is an essential factor in Maine's economy, leading to the negative sentiment behind climate change.
+
+
+#### Recommendations 
+To look more specifically at the various stakeholders involved in climate change for the overall regions, I would recommend looking into universities and carbon plants for each region respectively. Although there might be a higher negative sentiment in those areas, it would be interesting to find out the context as to why there is such a negative sentiment. In more recent news, I think more studies have been conducted on climate change and how the world is losing the necessary sources to survive at a faster pace than calculated, which leads into emotions like fear and anger. Overall, it would be important to look at the different stakeholders. 
