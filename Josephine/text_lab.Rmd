@@ -15,6 +15,8 @@ Your main goal (and the goal of all practicing data scientists!) is to translate
 
 ## What we're tracking 
 Essentially, we used the phrase "Climate Change" for various regions to track sentiment in 2021.
+
+
 #### Loading Essential Libraries 
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -61,6 +63,8 @@ table(mid_atl_sentiment_bing$sentiment)
 table(mid_atl_sentiment_nrc$sentiment)
 ```
 
+From the nrc lexicon, it would seem that most articles have a positive sentiment on climate change and the next highest sentiment would be negative. 
+
 #### Plot Sentiment 
 ```{r}
 ggplot(data = mid_atl_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Mid Atlantic Region Sentiment Range")+theme_minimal()
@@ -84,6 +88,8 @@ There are frequent words in the documents that include science, emissions, globa
 
 ## NorthEast Region 
 The text document was downloaded from the Lexus Nexus database. 30 of the most recent newspapers written by the Bangor Daily News in Maine were compiled as one RTF file and converted into an text file. 
+
+
 #### Load in NorthEast Region File
 ```{r} 
 # import data from compiled newspaper reading
@@ -114,6 +120,10 @@ table(north_sentiment_bing$sentiment)
 table(north_sentiment_nrc$sentiment)
 ```
 
+
+From the nrc sentiment, it seems that the emotion most felt in the articles is positive and then the second highest emotion would be negative emotions.
+
+
 #### Plot Sentiment 
 ```{r}
 ggplot(data = north_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Northeast Region Sentiment Range")+theme_minimal()
@@ -132,7 +142,7 @@ ggplot(north[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_m
 
 
 #### Results 
-Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. If there are carbon plants, this could lead to negative sentiment for climate change because it would decrease profitability for the plants. It's also interesting how maple showed up in the climate change articles because I don't think maple is related to climate change.
+Excluding the words "climate", "change", and "maine", it seems like the most frequent words that come up are carbon, warming, bangor, maple, and energy. I think it would be interesting to look at the carbon industry in Maine and see how the environment has been impacted through that industry. If there are carbon plants, this could lead to negative sentiment for climate change because it would decrease profitability for the plants. It's also interesting how maple showed up in the climate change articles because maple is actually important for Maine's economy as the maple syrup industry is one of it's biggest industries. There have been some studies that have shown how climate change negatively impacts the maple syrup industry, so without context, it would have been unnerving to see maple in a climate change word cloud. 
 
 
 #### Conducting the tf-idf 
@@ -166,5 +176,5 @@ View(region_words)
 From the tf-idf, we were able to see some of the more popular words across the MidAtlantic region and the NorthEast region. Excluding the words "climate" and "change", the most important words seemed to be Pittsburgh and Bangor. This makes sense as it's the names of the newspapers but could be filtered out. The next most important words were syrup and mayewski. Through research, I found that Mayewski is the director and professor of the Climate Change Institute at the University of Maine. I also found in some other articles that climate change is negatively impacting Maine's maple syrup industry which is an essential factor in Maine's economy, leading to the negative sentiment behind climate change.
 
 
-#### Recommendations 
-To look more specifically at the various stakeholders involved in climate change for the overall regions, I would recommend looking into universities and carbon plants for each region respectively. Although there might be a higher negative sentiment in those areas, it would be interesting to find out the context as to why there is such a negative sentiment. In more recent news, I think more studies have been conducted on climate change and how the world is losing the necessary sources to survive at a faster pace than calculated, which leads into emotions like fear and anger. Overall, it would be important to look at the different stakeholders. 
+### Recommendations 
+To look more specifically at the various stakeholders involved in climate change for the overall regions, I would recommend looking into universities as well as their faculty and carbon plants for each region respectively. Although there might be a higher negative sentiment in those areas, it would be interesting to find out the context as to why there is such a negative sentiment. In more recent news, I think more studies have been conducted on climate change and how the world is losing the necessary sources to survive at a faster pace than calculated, which leads into emotions like fear and anger. Overall, it would be important to look at the different stakeholders. 
