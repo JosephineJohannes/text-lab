@@ -194,4 +194,10 @@ inag_words <- inag_words %>%
 View(inag_words)
 
 ```
+Excluding words that do not relate to climate change, the top 5 words for the tf-idf frequency by region are:
 
+**West Coast:** Lithium, rights, biden, desert, design
+
+**Midwest:** paddock, tornado, restoration, district, lake
+
+The west coast has a more political focus while the midwest has a more farming and impacts of natural distasters focus.  
