@@ -225,9 +225,9 @@ total_words_region <- word_count_region %>%
   group_by(article) %>% 
   summarize(total = sum(n))
 
-region_words <- left_join(word_count, total_words)
+region_words <- left_join(word_count_region, total_words_region)
 
-region_words <- inag_words %>%
+region_words <- region_words %>%
   bind_tf_idf(word, article, n)
 
 View(region_words)
