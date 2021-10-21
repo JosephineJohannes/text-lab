@@ -6,6 +6,7 @@ output: html_document
 ---
 ## The Process
 Steps: 
+
 1. Find newspapers that correspond to a specific region in the United States and download multiple articles as one text file 
 2. Load the files and essential libraries 
 3. Find the frequency of words per region by tokenizing the document 
@@ -92,7 +93,7 @@ west_sent_plot <- ggplot(data = cali_sentiment_affin,
        aes(x=value)
         )+
   geom_histogram()+
-  ggtitle("West Coast Sentiment Range")+
+  ggtitle("West Coast")+
   theme_minimal()
 
 west_sent_plot
@@ -173,7 +174,7 @@ midwest_sent_plot <- ggplot(data = midwest_sentiment_affin,
        aes(x=value)
         )+
   geom_histogram()+
-  ggtitle("Midwest Sentiment Range")+
+  ggtitle("Midwest")+
   theme_minimal()
 
 midwest_sent_plot
@@ -238,7 +239,7 @@ table(mid_atl_sentiment_nrc$sentiment)
 
 #### Plot Sentiment 
 ```{r}
-mid_atl_sent_plot <- ggplot(data = mid_atl_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Mid Atlantic Region Sentiment Range")+theme_minimal() 
+mid_atl_sent_plot <- ggplot(data = mid_atl_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Mid Atlantic")+theme_minimal() 
 
 mid_atl_sent_plot
 ```
@@ -298,7 +299,7 @@ north_sentiment_bing <- north %>% inner_join(get_sentiments('bing'))
 
 #### Plot Sentiment 
 ```{r}
-north_sent_plot <- ggplot(data = north_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Northeast Region Sentiment Range")+theme_minimal()
+north_sent_plot <- ggplot(data = north_sentiment_affin, aes(x=value))+geom_histogram()+ggtitle("Northeast")+theme_minimal()
 
 north_sent_plot
 ```
@@ -310,7 +311,7 @@ From the graph, it seems like there are more words that have a negative sentimen
 Here we use the ggplot package 
 ```{r}
 set.seed(42)
-north_cloud <- ggplot(north[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_minimal()+ ggtitle("Northeast Region Word Cloud")
+north_cloud <- ggplot(north[1:100,], aes(label = word, size = n))+geom_text_wordcloud()+theme_minimal()+ ggtitle("Northeast Word Cloud")
 
 north_cloud
 
@@ -358,7 +359,7 @@ southwest_sent_plot <- ggplot(data = texas_sentiment_affin,
        aes(x=value)
         )+
   geom_histogram()+
-  ggtitle("Southwest Sentiment Range")+
+  ggtitle("Southwest")+
   theme_minimal()
 
 southwest_sent_plot
@@ -373,7 +374,8 @@ set.seed(42)
 southwest_cloud <- ggplot(texas_monthly[1:50,], aes(label = word, size = n)
        ) +
   geom_text_wordcloud() +
-  theme_minimal()
+  theme_minimal() +
+  ggtitle("Southwest Word Cloud")
 
 southwest_cloud
 ```
@@ -419,7 +421,7 @@ southeast_sent_plot <- ggplot(data = atlanta_sentiment_affin,
        aes(x=value)
         )+
   geom_histogram()+
-  ggtitle("Southeast Sentiment Range")+
+  ggtitle("Southeast")+
   theme_minimal()
 
 southeast_sent_plot
@@ -434,7 +436,7 @@ set.seed(42)
 southeast_cloud <- ggplot(atlanta_journal[1:50,], aes(label = word, size = n)
        ) +
   geom_text_wordcloud() +
-  ggtitle("Southeast Word Cloud")
+  ggtitle("Southeast Word Cloud") +
   theme_minimal()
 
 southeast_cloud  
@@ -443,10 +445,8 @@ southeast_cloud
 #### Results
 The word cloud for the southeast suggests that the southeast's concerns with climate change involve health and science as well as politics, with words like "health", "science"/"scientists", and "carbon", as well as "presidential", "candidates", and "news". Judging from the word cloud alone, the words are pretty neutral, but when combined with the sentiment analysis, it seems as though words in the southeast about climate change invoke anger and fear on the topics of health, science, and politics.
 
-## Every Region 
-=======
+
 ## National Comparison 
->>>>>>> 6e137ca7df22c7a0a6f83d9cc25ff4eb3af5952c
 
 ```{r}
 cali_inag_raw <- as.tibble(read_lines("cali-news.txt"))
@@ -466,13 +466,12 @@ cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
 midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
 mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2238')
 north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
-southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1405')
-southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V780')
+southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1458')
+southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V833')
 
-region <- c("West","Midwest", "Mid-Atlantic", "Northeast", "Southwest", "Southeast")
+region <- c("WestCoast", "Midwest", "Mid-Atlantic", "Northeast", "Southwest", "Southeast")
 
-tf_idf_text <- tibble(region,text=t(tibble(cali_inag_bag,midwest_inag_bag, mid_atl_inag_bag, north_inag_bag, southwest_inag_bag, southeast_inag_bag,.name_repair = "universal")))
-
+tf_idf_text <- tibble(region,text=t(tibble(cali_inag_bag, midwest_inag_bag, mid_atl_inag_bag, north_inag_bag, southwest_inag_bag, southeast_inag_bag,.name_repair = "universal")))
 
 word_count <- tf_idf_text %>%
   unnest_tokens(word, text) %>%
@@ -492,13 +491,25 @@ head(inag_words, 100)
 View(inag_words)
 ```
 
+Excluding words that do not relate to climate change, the top 5 words for the tf-idf frequency by region are:
+West Coast: Lithium, rights, biden, desert, design
+Midwest: paddock, tornado, restoration, district, lake
+Northeast: bangor, maine’s, syrup, mayewski, farmers
+Mid-Atlantic: pittsburgh, ms, co.section, carnegie, nuclear
+Southeast: trout, marshes, brook, disappear, forests
+Southwest: countries, minister, parliament, pacific, foreign
+
+When looking at climate change the west coast seems to lean in a political direction, while the midwest focuses more on farmland and damage caused by natural disasters. Similarly, the southwest leans in a political direction with an international/global focus, while the southeast leans in a natural/environmental direction. In terms of the northeast region, the industry seemed to be negatively impacted by climate change and the mid atlantic region is more focused on studies and literature it seems.  
+
 ## Compare Word Clouds
 
 ```{r}
 ggarrange(west_cloud, midwest_cloud, mid_atl_cloud, north_cloud, southwest_cloud, southeast_cloud)
 ```
+In general the trends mentioned earlier still stand, but it is important to note that across every region the word warming commonly appeared as well as environmental.  This indicates that while the different regions may have different concerns about climate change, overall there is talk about warming of the planet and environmental impacts.
 
 ## Compare Sentiment Distribution
+
 ```{r}
 ggarrange(west_sent_plot, midwest_sent_plot, mid_atl_sent_plot, north_sent_plot, southwest_sent_plot, southeast_sent_plot)
 ```
