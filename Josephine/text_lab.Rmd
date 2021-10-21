@@ -156,11 +156,14 @@ View(word_count)
 total_words <- word_count %>% 
   group_by(region) %>% 
   summarize(total = sum(n))
-inag_words <- inner_join(word_count, total_words)
-inag_words <- inag_words %>%
+region_words <- inner_join(word_count, total_words)
+region_words <- region_words %>%
   bind_tf_idf(word, region, n)
-View(inag_words)
+View(region_words)
 ```
+
+
+From the tf-idf, we were able to see some of the more popular words across the MidAtlantic region and the NorthEast region. Excluding the words "climate" and "change", the most important words seemed to be Pittsburgh and Bangor. This makes sense as it's the names of the newspapers but could be filtered out. The next most important words were syrup and mayewski. Through research, I found that Mayewski is the director and professor of the Climate Change Institute at the University of Maine. I also found in some other articles that climate change is negatively impacting Maine's maple syrup industry which is an essential factor in Maine's economy, leading to the negative sentiment behind climate change.
 
 
 #### Recommendations 
