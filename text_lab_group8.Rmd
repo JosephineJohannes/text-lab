@@ -5,11 +5,9 @@ date: "10/20/2021"
 output: html_document
 ---
 ## The Process
-<<<<<<< HEAD
 Steps: 
 =======
 **Steps:** 
->>>>>>> 0d23527b9402688150848780e8cc08adf363f5d0
 
 1. Find newspapers that correspond to a specific region in the United States and download multiple articles as one text file 
 
@@ -381,13 +379,8 @@ set.seed(42)
 southwest_cloud <- ggplot(texas_monthly[1:50,], aes(label = word, size = n)
        ) +
   geom_text_wordcloud() +
-<<<<<<< HEAD
-  theme_minimal() +
-  ggtitle("Southwest Word Cloud")
-=======
   ggtitle("Southwest Word Cloud") +
   theme_minimal()
->>>>>>> 8a9d46e55c268a266198bf7fa1240e57c5594dc3
 
 southwest_cloud
 ```
@@ -474,21 +467,19 @@ data_prep <- function(x,y,z){
 }
 
 
-<<<<<<< HEAD
-cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
-midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
-mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2238')
-north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
-southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1458')
-southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V833')
-=======
+#cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2993')
+#midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2376')
+#mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2238')
+#north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V2129')
+#southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1458')
+#southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V833')
+
 cali_inag_bag <- data_prep(cali_inag_raw,'V1','V2812')
 midwest_inag_bag <- data_prep(midwest_inag_raw,'V1','V2175')
 mid_atl_inag_bag <- data_prep(mid_atl_inag_raw,'V1','V2088')
 north_inag_bag <- data_prep(north_inag_raw, 'V1', 'V1979')
 southwest_inag_bag <- data_prep(southwest_inag_raw,'V1','V1405')
 southeast_inag_bag <- data_prep(southeast_inag_raw, 'V1','V780')
->>>>>>> 0d23527b9402688150848780e8cc08adf363f5d0
 
 region <- c("WestCoast", "Midwest", "Mid-Atlantic", "Northeast", "Southwest", "Southeast")
 
